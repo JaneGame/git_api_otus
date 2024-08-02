@@ -4,7 +4,7 @@ describe('Проверка апишек', ()=>{
     let pass
     
     beforeEach(() =>{
-        const date = new Date()
+        const date = new Date().getTime()
         name = 'Hi' + date
         pass = 'True!' + date
     });
@@ -28,28 +28,27 @@ describe('Проверка апишек', ()=>{
     
         
     it('Создать пользователя с существующим логином', async () =>{
-        const date = new Date();
         
         const addUser = await fetch('https://bookstore.demoqa.com/Account/v1/User', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                userName: 'Hi' + date,
-                password: 'True!' + date,
+                userName: name,
+                password: pass,
             }),
           })
           const data = await addUser.json()
           console.log(data)
       
           expect(addUser.status).toEqual(201)
-          expect(data.username).toBe('Hi' + date)
+          expect(data.username).toBe(name)
 
         const doublelogin = await fetch('https://bookstore.demoqa.com/Account/v1/User', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                userName: 'Hi' + date,
-                password: 'True!' + date,
+                userName: name,
+                password: pass,
             }),
           })
         const dataError = await doublelogin.json()
@@ -61,13 +60,12 @@ describe('Проверка апишек', ()=>{
         })
 
     it('Пароль не подходит для регистрации', async () =>{
-        const date = new Date();
         
         const addUser = await fetch('https://bookstore.demoqa.com/Account/v1/User', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                userName: 'Hi' + date,
+                userName: name,
                 password: 'True',
             }),
           })
@@ -78,7 +76,7 @@ describe('Проверка апишек', ()=>{
           expect(data.message).toContain('Passwords must have')
         })
 
-    it.only('Генерация токена', async () =>{
+    it('Генерация токена', async () =>{
 
         
         const addUser = await fetch('https://bookstore.demoqa.com/Account/v1/User', {
@@ -109,7 +107,29 @@ describe('Проверка апишек', ()=>{
             console.log(dataToken)
 
             expect(token.status).toEqual(200)
+            expect(dataToken.result).toBe('User authorized successfully.')
+            expect(dataToken.token).toString()
     
-    }, 50000)
+    }, 10000)
+
+
+    it('Неудачная генерация токена', async () =>{
+
+        const token = await fetch('https://bookstore.demoqa.com/Account/v1/GenerateToken',{
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                userName: name,
+                password: 1,
+        }),
+
+    })
+            const dataToken = await token.json()
+            console.log(dataToken)
+
+            expect(token.status).toEqual(200)
+            expect(dataToken.result).toBe('User authorization failed.')
+    
+    })
     
 })
