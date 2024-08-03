@@ -1,3 +1,5 @@
+import user from '../framework/services/user'
+
 describe('Проверка апишек', ()=>{
     
     let name
@@ -9,21 +11,22 @@ describe('Проверка апишек', ()=>{
         pass = 'True!' + date
     });
 
-    it('Успешное создание нового пользователя', async () =>{
+    it.only('Успешное создание нового пользователя', async () =>{
       
-        const addUser = await fetch('https://bookstore.demoqa.com/Account/v1/User', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                userName: name,
-                password: pass,
-            }),
-          })
-          const data = await addUser.json()
-          console.log(data)
+        // const addUser = await fetch('https://bookstore.demoqa.com/Account/v1/User', {
+        //     method: 'POST',
+        //     headers: { 'Content-Type': 'application/json' },
+        //     body: JSON.stringify({
+        //         userName: name,
+        //         password: pass,
+        //     }),
+        //   })
+        const addUser = await user.addUser()
+        const data = await addUser.json()
+        console.log(data)
       
-          expect(addUser.status).toEqual(201)
-          expect(data.username).toBe(name)
+        expect(addUser.status).toEqual(201)
+        expect(data.username).toBe(name)
         });
     
         
