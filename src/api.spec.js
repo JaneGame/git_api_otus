@@ -1,4 +1,4 @@
-import user from '../framework/services/user'
+import {user} from '../framework/services/user.js'
 
 describe('Проверка апишек', ()=>{
     
@@ -21,11 +21,11 @@ describe('Проверка апишек', ()=>{
         //         password: pass,
         //     }),
         //   })
-        const addUser = await user.addUser()
-        const data = await addUser.json()
+        const addUsers = await user.addUser()
+        const data = await addUsers.json()
         console.log(data)
       
-        expect(addUser.status).toEqual(201)
+        expect(addUsers.status).toEqual(201)
         expect(data.username).toBe(name)
         });
     
