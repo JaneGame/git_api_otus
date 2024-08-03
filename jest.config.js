@@ -6,7 +6,7 @@ module.exports = {
   transform: {
     '^.+\\.jsx?$': 'babel-jest',
   },
-  testMatch: ['**/src/api.spec.*'],
+  testMatch: ['**/src/*.spec.*'],
   globals: {
     testTimeout: 50000,
   },
