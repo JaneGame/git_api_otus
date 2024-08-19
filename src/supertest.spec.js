@@ -16,11 +16,9 @@ describe('Автотесты с супертестом',()=>{
       
         expect(addUsers.status).toEqual(201)
 
-        const getToken = await user.getToken(name, pass)
-        const token = getToken.body.token
-        expect(getToken.status).toEqual(200)
 
-        const login = await user.login(name, pass, token)
+        const login = await user.login(name, pass)
+        
 
         expect(login.status).toEqual(200)
         expect(login.body).toBe(true)
@@ -33,12 +31,7 @@ describe('Автотесты с супертестом',()=>{
       
         expect(addUsers.status).toEqual(201)
 
-        const getToken = await user.getToken(name, pass)
-        const token = getToken.body.token
-        expect(getToken.status).toEqual(200)
-
-        const getUser = await user.getUser(name, pass, token, userID)
-        console.log(getUser.body)
+        const getUser = await user.getUser(name, pass, userID)
 
         expect(getUser.status).toEqual(200)
         expect(getUser.body.username).toBe(name)
@@ -50,20 +43,17 @@ describe('Автотесты с супертестом',()=>{
         const userID = addUsers.body.userID
         expect(addUsers.status).toEqual(201)
 
-        const getToken = await user.getToken(name, pass)
-        const token = getToken.body.token
-        expect(getToken.status).toEqual(200)
 
-        const login = await user.login(name, pass, token)
+        const login = await user.login(name, pass)
         expect(login.status).toEqual(200)
         expect(login.body).toBe(true)
 
-        const delUser = await user.delUser(name, pass, token, userID)
+        const delUser = await user.delUser(name, pass, userID)
         expect(delUser.status).toEqual(204)
 
-        const getUser = await user.getUser(name, pass, token, userID)
+        const getUser = await user.getUser(name, pass, userID)
         expect(getUser.status).toEqual(401)
         expect(getUser.body.message).toBe('User not found!')
         
-    })
+    }, 10000)
 })

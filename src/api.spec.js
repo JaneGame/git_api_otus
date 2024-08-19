@@ -1,5 +1,6 @@
 // eslint-disable-next-line import/no-named-default
 import {default as user} from '../framework/services/user.js'
+import getToken from '../framework/fixtures/token.js'
 
 
 
@@ -55,7 +56,7 @@ describe('Проверка апишек', ()=>{
       
         expect(addUsers.status).toEqual(201)
         
-        const token = await user.getToken(name, pass)
+        const token = await getToken(name, pass)
 
         expect(token.status).toEqual(200)
         expect(token.body.result).toBe('User authorized successfully.')
@@ -71,7 +72,7 @@ describe('Проверка апишек', ()=>{
         expect(addUsers.status).toEqual(201)
 
     
-        const token = await user.getToken(name, '123')
+        const token = await getToken(name, '123')
 
 
         expect(token.status).toEqual(200)

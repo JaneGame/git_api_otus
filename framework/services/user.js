@@ -2,9 +2,14 @@ import supertest from "supertest";
 
 import config from "../config/config.js";
 
+import getToken from "../fixtures/token.js";
+
 const {url} = config;
 
 
+
+
+ 
 const user = {
     addUser:(name, pass) => {
         return supertest(url)
@@ -14,14 +19,9 @@ const user = {
 
     },
 
-    getToken:(name, pass) => {
-        return supertest(url)
-            .post('/Account/v1/GenerateToken')
-            .set('Accept', 'application/json')
-            .send({userName: name, password: pass})
-    },
 
-    login:(name, pass, token) => {
+    login:async (name, pass) => {
+        const {token} = (await getToken(name, pass)).body
         return supertest(url)
             .post('/Account/v1/Authorized')
             .set('Accept', 'application/json')
@@ -29,7 +29,8 @@ const user = {
             .send({userName: name, password: pass})
     },
 
-    getUser:(name, pass, token, UUID) => {
+    getUser:async (name, pass, UUID) => {
+        const {token} = (await getToken(name, pass)).body
         return supertest(url)
             .get(`/Account/v1/User/${UUID}`)
             .set('Accept', 'application/json')
@@ -37,7 +38,8 @@ const user = {
             .send({userName: name, password: pass})
     },
 
-    delUser:(name, pass, token, UUID) => {
+    delUser:async (name, pass, UUID) => {
+        const {token} = (await getToken(name, pass)).body
         return supertest(url)
             .del(`/Account/v1/User/${UUID}`)
             .set('Accept', 'application/json')
