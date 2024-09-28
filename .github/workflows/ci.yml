@@ -29,7 +29,7 @@ jobs:
           node-version: 20.11.0
           cache: 'npm'
       - run: npm ci
-      - run: npm run lint
+      - run: npm run lint:ci
 
   test:
     environment:
@@ -49,7 +49,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './reports/html-report'
+          path: 'reports/html-report'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
