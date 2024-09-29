@@ -54,20 +54,19 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
-  # deploy:
-  #   needs: ["test"]
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - uses: actions/setup-node@v4
-  #       with:
-  #         node-version: 20.11.0
-  #         cache: 'npm'
-  #     - run: npm ci
-  #     - run: npm run test
-  #     - name: Setup Pages
-  #       uses: actions/configure-pages@v4
-  #     - name: Deploy to GitHub Pages
-  #       id: deployment
-  #       uses: actions/deploy-pages@v4
+  notification:
+    if: always()
+    needs: [ eslint, test ]
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          curl --request POST \
+               --url https://api.telegram.org/bot${{secrets.TEST_TELEGRAM_TOKEN}}/sendMessage \
+               --header 'Content-Type: application/json' \
+                --data '{ "chat_id": "${{secrets.TEST_TELEGRAM_CHAT_ID}}", "text": "Report link: environment.url" }'
     
